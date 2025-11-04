@@ -1,6 +1,3 @@
-// ctx: pointer to context struct
-// argv: pointer to argument string pointers
-// argv_buf: pointer to string data buffer
 function args_get(ctx, argv, argv_buf) {
     const data_view = new DataView(instance.exports.memory.buffer);
     const argc = data_view.getUint32(ctx + 4, true);
@@ -9,8 +6,16 @@ function args_get(ctx, argv, argv_buf) {
         data_view.setUint32(argv + (i * 4), argv_buf, true);
         const argv_ptr = data_view.getUint32(ctx_argv + (i * 4), true);
         const len = (new Uint8Array(instance.exports.memory.buffer, argv_ptr)).indexOf(0);
-        for(let j = 0; j < len; j++) {
-            
+        for(j = 0; j < len; j++) {
+            data_view.setUint8(argv_buf + j, data_view.getUint8(argv_ptr + j));
         }
+        argv_buf += len;
+        data_view.setUint8(argv_buf, 0);
+        argv_buf++;
     }
+    return 0; // Success
+}
+
+function args_sizes_get(ctx, argc, argv_buf_size) {
+    //
 }
