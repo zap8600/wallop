@@ -1,2 +1,2 @@
-# wasixbrowser
-WASIX polyfill functions for the browser
+# wallop
+Kernel for running WASI(X) applications in the browser, implemented in Javascript.
