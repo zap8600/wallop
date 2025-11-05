@@ -1,7 +1,7 @@
-import { WASIXProcess } from "./wasix";
+import { WASIXProcess } from "./wasix.js";
 
 onmessage = (e) => {
     if(e.data[0] === "start") {
-        // TODO: Start process 
+        const process = new WASIXProcess(e.data[1], e.data[2]);
     }
 }

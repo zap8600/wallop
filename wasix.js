@@ -117,8 +117,9 @@ export class WASIXProcess {
                         throw new Error("fd_tell");
                     },
 
-                    fd_write() {
-                        throw new Error("fd_write");
+                    fd_write(fd, iovs_ptr, iovs_len, nwritten) {
+                        // throw new Error("fd_write");
+                        postMessage(["fd_write", fd, iovs_ptr, iovs_len, nwritten]);
                     },
 
                     path_create_directory() {
