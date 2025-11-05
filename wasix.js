@@ -1,10 +1,11 @@
-
-
-class WASIXProcess {
+// https://web.dev/articles/webassembly-threads
+export class WASIXProcess {
     constructor(buffer_source) {
-        this.instance = WebAssembly.instantiate(
+        this.memory = WebAssembly.memory({shared: true});
+        const { instance } = WebAssembly.instantiate(
             buffer_source,
             {
+                // TODO: use worker postMessage to handle syscalls
                 "wasi_snapshot_preview1": {
                     args_get(argv, argv_buf) {
                         throw new Error("args_get"); // TODO
@@ -27,9 +28,10 @@ class WASIXProcess {
                     },
 
                     clock_time_get(clock_id, precision, time) {
-                        const data_view = new DataView(instance.exports.memory.buffer);
-                        data_view.setBigUint64(time, BigInt(Date.now() * 1000000), true);
-                        return 0;
+                        // const data_view = new DataView(instance.exports.memory.buffer);
+                        // data_view.setBigUint64(time, BigInt(Date.now() * 1000000), true);
+                        // return 0;
+                        throw new Error("clock_time_get"); // TODO
                     },
 
                     fd_advise() {
@@ -162,7 +164,8 @@ class WASIXProcess {
                     },
 
                     proc_exit(code) {
-                        console.log("Process exited with exit code " + code);
+                        // console.log("Process exited with exit code " + code);
+                        throw new Error("proc_exit"); // TODO
                     },
 
                     proc_raise() {
@@ -188,8 +191,17 @@ class WASIXProcess {
                     sock_shutdown() {
                         throw new Error("sock_shutdown");
                     },
+                },
+                env: {
+                    memory: memory,
                 }
             }
         );
+        this.instance = instance;
+    }
+
+    start(args, env) {
+        // TODO: Use args and env
+        this.instance.exports._start();
     }
 }
