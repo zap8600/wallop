@@ -1,21 +1,35 @@
-function args_get(ctx, argv, argv_buf) {
+function args_get(argv, argv_buf) {
     const data_view = new DataView(instance.exports.memory.buffer);
-    const argc = data_view.getUint32(ctx + 4, true);
-    const ctx_argv = data_view.getUint32(ctx + 8, true);
-    for(let i = 0; i < argc; i++) {
-        data_view.setUint32(argv + (i * 4), argv_buf, true);
-        const argv_ptr = data_view.getUint32(ctx_argv + (i * 4), true);
-        const len = (new Uint8Array(instance.exports.memory.buffer, argv_ptr)).indexOf(0);
-        for(j = 0; j < len; j++) {
-            data_view.setUint8(argv_buf + j, data_view.getUint8(argv_ptr + j));
-        }
-        argv_buf += len;
-        data_view.setUint8(argv_buf, 0);
-        argv_buf++;
-    }
-    return 0; // Success
+    // TODO
+    return 0;
 }
 
-function args_sizes_get(ctx, argc, argv_buf_size) {
-    //
+function args_sizes_get(argc, argv_buf_size) {
+    const data_view = new DataView(instance.exports.memory.buffer);
+    // TODO
+    return 0;
+}
+
+function environ_get(env, env_buf) {
+    // TODO
+    return 0;
+}
+
+function environ_sizes_get(env_count, env_buf_size) {
+    // TODO
+    const data_view = new DataView(instance.exports.memory.buffer);
+    data_view.setUint32(env_count, 0);
+    data_view.setUint32(env_buf_size, 0);
+    return 0;
+}
+
+function clock_get_res(clock_id, resolution) {
+    // TODO
+    return 0;
+}
+
+function clock_time_get(clock_id, precision, time) {
+    const data_view = new DataView(instance.exports.memory.buffer);
+    data_view.setBigUint64(time, BigInt(Date.now() * 1000000), true);
+    return 0;
 }
