@@ -1,9 +1,11 @@
 // https://web.dev/articles/webassembly-threads
+// https://dev.to/ndesmic/building-a-minimal-wasi-polyfill-for-browsers-4nel
+// https://web.dev/articles/asyncify
+
 export class WASIXProcess {
-    constructor(buffer_source) {
-        this.memory = WebAssembly.memory({shared: true});
+    constructor(module, memory) {
         const { instance } = WebAssembly.instantiate(
-            buffer_source,
+            module,
             {
                 // TODO: use worker postMessage to handle syscalls
                 "wasi_snapshot_preview1": {
@@ -200,8 +202,7 @@ export class WASIXProcess {
         this.instance = instance;
     }
 
-    start(args, env) {
-        // TODO: Use args and env
+    start() {
         this.instance.exports._start();
     }
 }

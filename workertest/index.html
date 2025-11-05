@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="beans">
+            <p>Hello, world</p>
+        </div>
+        <p id="error"></p>
+        <script>
+            if(window.Worker) {
+                const worker = new Worker("./worker.js");
+                worker.onmessage = (num) => {
+                    const new_text = document.createElement("p");
+                    new_text.innerHTML = num;
+                    document.getElementById("beans").appendChild(new_text);
+                }
+                worker.postMessage("start");
+            } else {
+                document.getElementById("error").innerHTML = "No workers!";
+            }
+        </script>
+    </body>
+</html>
