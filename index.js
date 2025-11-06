@@ -22,7 +22,12 @@ import { WASIXProcess } from "./wasix.js";
                 for(let i = 0; i < iovs_len * 2; i += 2) {
                     const offset = iovs[i];
                     const length = iovs[i + 1];
-                    const text_chunk = decoder.decode(new Int8Array(memory.buffer, offset, length));
+
+                    // We need to copy since text decoder wom't decode from a shared buffer
+                    let chunk_copy = new ArrayBuffer(length);
+                    new Uint8Array(chunk_copy).set(new Uint8Array(memory.buffer, offset, length));
+
+                    const text_chunk = decoder.decode(new Int8Array(chunk_copy));
                     text += text_chunk;
                     total_bytes += length;
                 }

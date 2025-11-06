@@ -168,7 +168,7 @@ export class WASIXProcess {
 
                     proc_exit(code) {
                         // console.log("Process exited with exit code " + code);
-                        throw new Error("proc_exit"); // TODO
+                        postMessage(["proc_exit", code]); // TODO
                     },
 
                     proc_raise() {
