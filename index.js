@@ -1,43 +1,55 @@
+import { memo } from "react";
 import { WASIXProcess } from "./wasix.js";
 
 (async function () {
+    const args = ["./wasitests/hello.wasm"].map(s => new TextEncoder);
     const memory = new WebAssembly.Memory({initial: 2, maximum: 2, shared: true});
     const module = await WebAssembly.compileStreaming(fetch("./wasitests/hello.wasm"));
 
     // const process = new WASIXProcess(module, memory);
     const worker = new Worker("./process_worker.js", {type: "module"});
     worker.onmessage = (e) => {
-        if(e.data[0] === "fd_write") {
-            const fd = e.data[1];
-            const iovs_ptr = e.data[2];
-            const iovs_len = e.data[3];
-            const nwrittem = e.data[4];
+        switch(e.data[0]) {
+            case "fd_write": {
+                const fd = e.data[1];
+                const iovs_ptr = e.data[2];
+                const iovs_len = e.data[3];
+                const nwrittem = e.data[4];
 
-            // TODO: Make this thread-safe
-            const iovs = new Uint32Array(memory.buffer, iovs_ptr, iovs_len * 2);
-            if(fd === 1) {
-                let text = "";
-                let total_bytes = 0;
-                const decoder = new TextDecoder();
-                for(let i = 0; i < iovs_len * 2; i += 2) {
-                    const offset = iovs[i];
-                    const length = iovs[i + 1];
+                // TODO: Make this thread-safe
+                const iovs = new Uint32Array(memory.buffer, iovs_ptr, iovs_len * 2);
+                if(fd === 1) {
+                    let text = "";
+                    let total_bytes = 0;
+                    const decoder = new TextDecoder();
+                    for(let i = 0; i < iovs_len * 2; i += 2) {
+                        const offset = iovs[i];
+                        const length = iovs[i + 1];
 
-                    // We need to copy since text decoder wom't decode from a shared buffer
-                    let chunk_copy = new ArrayBuffer(length);
-                    new Uint8Array(chunk_copy).set(new Uint8Array(memory.buffer, offset, length));
+                        // We need to copy since text decoder wom't decode from a shared buffer
+                        let chunk_copy = new ArrayBuffer(length);
+                        new Uint8Array(chunk_copy).set(new Uint8Array(memory.buffer, offset, length));
 
-                    const text_chunk = decoder.decode(new Int8Array(chunk_copy));
-                    text += text_chunk;
-                    total_bytes += length;
+                        const text_chunk = decoder.decode(new Int8Array(chunk_copy));
+                        text += text_chunk;
+                        total_bytes += length;
+                    }
+                    const data_view = new DataView(memory.buffer);
+                    data_view.setInt32(nwrittem, total_bytes, true);
+                    console.log(text);
                 }
-                const data_view = new DataView(memory.buffer);
-                data_view.setInt32(nwrittem, total_bytes, true);
-                console.log(text);
+                return 0;
             }
-            return 0;
-        } else {
-            throw new Error(e.data[0]);
+            case "args_get": {
+                const argv = new Uint32Array(memory.buffer, e.data[1], args.length);
+                const argv_buf = new Uint8Array(memory.buffer, e.data[2]);
+
+                let offset = 0;
+                for(let i = 0; i < args.length; i++) {
+
+                }
+            }
+            default: throw new Error(e.data[0]);
         }
     }
     worker.postMessage(["start", module, memory]);

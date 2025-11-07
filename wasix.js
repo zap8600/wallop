@@ -10,7 +10,8 @@ export class WASIXProcess {
                 // TODO: use worker postMessage to handle syscalls
                 "wasi_snapshot_preview1": {
                     args_get(argv, argv_buf) {
-                        throw new Error("args_get"); // TODO
+                        // throw new Error("args_get"); // TODO
+                        postMessage(["args_get", argv, argv_buf]);
                     },
 
                     args_sizes_get(argc, argv_buf_size) {
