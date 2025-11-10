@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -10,12 +11,6 @@ void print_ch(const char c) {
     write(STDOUT_FILENO, &c, 1);
 }
 
-int main(int argc, char** argv) {
-    char* msg = "Hello, world!\n";
-    print_str(msg);
-    for(int i = 0; i < argc; i++) {
-        print_str(argv[i]);
-        print_ch('\n');
-    }
-    return 0;
+int main() {
+    //
 }

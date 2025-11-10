@@ -1,7 +1,7 @@
-import { WASIXProcess } from "./wasix.js";
+const encoder = new TextEncoder();
 
 (async function () {
-    const args = ["./wasitests/hello.wasm"].map(s => new TextEncoder);
+    const args = ["./wasitests/hello.wasm"].map(s => encoder.encode(s + "\0"));
     const memory = new WebAssembly.Memory({initial: 2, maximum: 2, shared: true});
     const module = await WebAssembly.compileStreaming(fetch("./wasitests/hello.wasm"));
 
@@ -45,7 +45,6 @@ import { WASIXProcess } from "./wasix.js";
 
                 let offset = 0;
                 for(let i = 0; i < args.length; i++) {
-
                 }
             }
             default: throw new Error(e.data[0]);
