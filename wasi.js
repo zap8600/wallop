@@ -1,0 +1,245 @@
+// https://web.dev/articles/webassembly-threads
+// https://dev.to/ndesmic/building-a-minimal-wasi-polyfill-for-browsers-4nel
+// https://web.dev/articles/asyncify
+
+export class WASI {
+    constructor() {
+        this.bind();
+    }
+
+    bind() {
+        this.args_get = this.args_get.bind(this);
+        this.args_sizes_get = this.args_sizes_get.bind(this);
+        this.environ_get = this.environ_get.bind(this);
+        this.environ_sizes_get = this.environ_sizes_get.bind(this);
+        this.clock_get_res = this.clock_get_res.bind(this);
+        this.clock_time_get = this.clock_time_get.bind(this);
+        this.fd_advise = this.fd_advise.bind(this);
+        this.fd_allocate = this.fd_allocate.bind(this);
+        this.fd_close = this.fd_close.bind(this);
+        this.fd_datasync = this.fd_datasync.bind(this);
+        this.fd_fdstat_get = this.fd_fdstat_get.bind(this);
+        this.fd_fdstat_set_flags = this.fd_fdstat_set_flags.bind(this);
+        this.fd_fdstat_set_rights = this.fd_fdstat_set_rights.bind(this);
+        this.fd_filestat_get = this.fd_filestat_get.bind(this);
+        this.fd_filestat_set_flags = this.fd_filestat_set_flags.bind(this);
+        this.fd_filestat_set_rights = this.fd_filestat_set_rights.bind(this);
+        this.fd_pread = this.fd_pread.bind(this);
+        this.fd_prestat_get = this.fd_prestat_get.bind(this);
+        this.fd_prestat_dir_name = this.fd_prestat_dir_name.bind(this);
+        this.fd_pwrite = this.fd_pwrite.bind(this);
+        this.fd_read = this.fd_read.bind(this);
+        this.fd_readdir = this.fd_readdir.bind(this);
+        this.fd_renumber = this.fd_renumber.bind(this);
+        this.fd_seek = this.fd_seek.bind(this);
+        this.fd_sync = this.fd_sync.bind(this);
+        this.fd_tell = this.fd_tell.bind(this);
+        this.fd_write = this.fd_write.bind(this);
+        this.path_create_directory = this.path_create_directory.bind(this);
+        this.path_filestat_get = this.path_filestat_get.bind(this);
+        this.path_filestat_set_times = this.path_filestat_set_times.bind(this);
+        this.path_link = this.path_link.bind(this);
+        this.path_open = this.path_open.bind(this);
+        this.path_readlink = this.path_readlink.bind(this);
+        this.path_remove_directory = this.path_remove_directory.bind(this);
+        this.path_rename = this.path_rename.bind(this);
+        this.path_symlink = this.path_symlink.bind(this);
+        this.path_unlink_file = this.path_unlink_file.bind(this);
+        this.poll_oneoff = this.poll_oneoff.bind(this);
+        this.proc_exit = this.proc_exit.bind(this);
+        this.proc_raise = this.proc_raise.bind(this);
+        this.sched_yield = this.sched_yield.bind(this);
+        this.sock_accept = this.sock_accept.bind(this);
+        this.sock_recv = this.sock_recv.bind(this);
+        this.sock_send = this.sock_send.bind(this);
+        this.sock_shutdown = this.sock_shutdown.bind(this);
+    }
+
+    args_get(argv, argv_buf) {
+        throw new Error("args_get");
+    }
+
+    args_sizes_get(argc, argv_buf_size) {
+        throw new Error("args_sizes_get");
+    }
+
+    environ_get(env, env_buf) {
+        throw new Error("environ_get");
+    }
+
+    environ_sizes_get(env_count, env_buf_size) {
+        throw new Error("environ_sizes_get");
+    }
+
+    clock_get_res(clock_id, resolution) {
+        throw new Error("clock_get_res");
+    }
+
+    clock_time_get(clock_id, precision, time) {
+        // const data_view = new DataView(instance.exports.memory.buffer);
+        // data_view.setBigUint64(time, BigInt(Date.now() * 1000000), true);
+        // return 0;
+        throw new Error("clock_time_get");
+    }
+
+    fd_advise() {
+        throw new Error("fd_advise");
+    }
+
+    fd_allocate() {
+        throw new Error("fd_allocate");
+    }
+
+    fd_close() {
+        throw new Error("fd_close");
+    }
+
+    fd_datasync() {
+        throw new Error("fd_datasync");
+    }
+
+    fd_fdstat_get() {
+        throw new Error("fd_fdstat_get");
+    }
+
+    fd_fdstat_set_flags() {
+        throw new Error("fd_fdstat_set_flags");
+    }
+
+    fd_fdstat_set_rights() {
+        throw new Error("fd_fdstat_set_rights");
+    }
+
+
+    fd_filestat_get() {
+        throw new Error("fd_filestat_get");
+    }
+
+    fd_filestat_set_flags() {
+        throw new Error("fd_filestat_set_size");
+    }
+
+    fd_filestat_set_rights() {
+        throw new Error("fd_filestat_set_times");
+    }
+
+    fd_pread() {
+        throw new Error("fd_pread");
+    }
+
+    fd_prestat_get() {
+        throw new Error("fd_prestat_get");
+    }
+
+    fd_prestat_dir_name() {
+        throw new Error("fd_prestat_dir_name");
+    }
+
+    fd_pwrite() {
+        throw new Error("fd_pwrite");
+    }
+
+    fd_read() {
+        throw new Error("fd_read");
+    }
+
+    fd_readdir() {
+        throw new Error("fd_readdir");
+    }
+
+    fd_renumber() {
+        throw new Error("fd_renumber");
+    }
+
+    fd_seek() {
+        throw new Error("fd_seek");
+    }
+
+    fd_sync() {
+        throw new Error("fd_sync");
+    }
+
+    fd_tell() {
+        throw new Error("fd_tell");
+    }
+
+    fd_write(fd, iovs_ptr, iovs_len, nwritten) {
+        throw new Error("fd_write");
+    }
+
+    path_create_directory() {
+        throw new Error("path_create_directory");
+    }
+
+    path_filestat_get() {
+        throw new Error("path_filestat_get");
+    }
+
+    path_filestat_set_times() {
+        throw new Error("path_filestat_set_times");
+    }
+
+    path_link() {
+        throw new Error("path_link");
+    }
+
+    path_open() {
+        throw new Error("path_open");
+    }
+
+    path_readlink() {
+        throw new Error("path_readlink");
+    }
+
+    path_remove_directory() {
+        throw new Error("path_remove_directory");
+    }
+
+    path_rename() {
+        throw new Error("path_rename");
+    }
+
+    path_symlink() {
+        throw new Error("path_symlink");
+    }
+
+    path_unlink_file() {
+        throw new Error("path_unlink_file");
+    }
+
+    poll_oneoff() {
+        throw new Error("poll_oneoff");
+    }
+
+    proc_exit(code) {
+        throw new Error("proc_exit");
+    }
+
+    proc_raise() {
+        throw new Error("proc_raise");
+    }
+
+    sched_yield() {
+        throw new Error("sched_yield");
+    }
+
+    sock_accept() {
+        throw new Error("sock_accept");
+    }
+
+    sock_recv() {
+        throw new Error("sock_recv");
+    }
+
+    sock_send() {
+        throw new Error("sock_send");
+    }
+
+    sock_shutdown() {
+        throw new Error("sock_shutdown");
+    }
+
+    "thread-spawn"() {
+        throw new Error("thread-spawn");
+    }
+}
