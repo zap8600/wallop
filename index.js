@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { WASIXProcess } from "./wasix.js";
 
 (async function () {
