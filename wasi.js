@@ -238,8 +238,4 @@ export class WASI {
     sock_shutdown() {
         throw new Error("sock_shutdown");
     }
-
-    "thread-spawn"() {
-        throw new Error("thread-spawn");
-    }
 }
