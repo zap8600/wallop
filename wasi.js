@@ -4,9 +4,13 @@
 
 export class WASI {
     memory;
+    args;
 
-    constructor(memory) {
+    constructor(memory, args) {
+        const encoder = new TextEncoder();
         this.memory = memory;
+        this.args = args.map(s => { encoder.encode(s + "\0"); });
+        postMessage([this.args, 0, "log"]);
         this.bind();
     }
 
@@ -58,12 +62,29 @@ export class WASI {
         this.sock_shutdown = this.sock_shutdown.bind(this);
     }
 
-    args_get(argv, argv_buf) {
-        throw new Error("args_get");
+    args_get(argv_ptr, argv_buf_ptr) {
+        const length = this.args.reduce((sum, value) => { sum + value.byteLength }, 0);
+        const argv = new Uint32Array(this.memory.buffer, argv_ptr, this.args.length);
+        const argv_buf = new Uint8Array(this.memory.buffer, argv_buf_ptr, length);
+
+        let offset = 0;
+        for(let i = 0; i < this.args.length; i++) {
+            const current_ptr = argv_buf_ptr + offset;
+            argv[i] = current_ptr;
+            argv_buf.set(this.args[i], offset);
+            offset += this.args[i].byteLength;
+        }
+
+        return 0;
     }
 
-    args_sizes_get(argc, argv_buf_size) {
-        throw new Error("args_sizes_get");
+    args_sizes_get(argc_ptr, argv_buf_size_ptr) {
+        // throw new Error("args_sizes_get");
+        const length = this.args.reduce((sum, value) => { sum + value.byteLength }, 0);
+        const data_view = new DataView(this.memory.buffer);
+        data_view.setUint32(argc_ptr, this.args.length, true);
+        data_view.setUint32(argv_buf_size_ptr, length, true);
+        return 0;
     }
 
     environ_get(env, env_buf) {

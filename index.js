@@ -1,5 +1,11 @@
 (async function () {
-    const module = await WebAssembly.compileStreaming(fetch("./wasitests/thread.wasm"));
+    const encoder = new TextEncoder();
+
+    const args_array = [
+        "./wasitests/args.wasm"
+    ];
+
+    const module = await WebAssembly.compileStreaming(fetch(args_array[0]));
     const memory = new WebAssembly.Memory({ initial: 2, maximum: 1024, shared: true })
 
     const main_worker = new Worker("./mainworker.js", { type: "module" });
@@ -34,7 +40,7 @@
                 worker.onerror = (f) => {
                     throw f;
                 }
-                worker.postMessage([module, memory, e.data[0], e.data[1]]);
+                worker.postMessage([module, memory, e.data[0], e.data[1], args_array]);
                 workers.push(worker);
                 break;
             }
@@ -43,7 +49,7 @@
     main_worker.onerror = (d) => {
         throw d;
     }
-    main_worker.postMessage([module, memory]);
+    main_worker.postMessage([module, memory, args_array]);
 
     // WebAssembly.instantiate(module, {
     //     "wasi_snapshot_preview1": wasi,
