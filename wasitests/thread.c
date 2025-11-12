@@ -3,6 +3,17 @@
 #include <pthread.h>
 // #include <errno.h>
 
+char* hex_str(unsigned int num) {
+    static char buf[11] = {0};
+    memcpy(buf, "0x", 2);
+    unsigned int i;
+    unsigned int j;
+    for(i = 0, j = 7; i < 8; i++, j--) {
+        buf[j + 2] = "0123456789abcdef"[(num >> (i * 4)) & 0xf];
+    }
+    return &(buf[0]);
+}
+
 // Made so that I only need fd_write to get console output
 void print_str(const char* s) {
     write(STDOUT_FILENO, s, strlen(s));
@@ -12,26 +23,33 @@ void print_err(const char* s) {
     write(STDERR_FILENO, s, strlen(s));
 }
 
+pthread_mutex_t the_mutex = PTHREAD_MUTEX_INITIALIZER;
+int counter = 0;
+
 void* thread(void* ptr) {
     print_str("thread!\n");
     for(int i = 0; i < 100; i++) {
-        print_str("thread loop!\n");
+        pthread_mutex_lock(&the_mutex);
+        counter++;
+        print_str(hex_str(counter));
+        pthread_mutex_unlock(&the_mutex);
     }
 }
 
 int main() {
     pthread_t the_thread;
+    pthread_t the_thread_again;
     int create_return = pthread_create(&the_thread, NULL, thread, NULL);
     if(create_return) {
-        print_err("failed to create thread!\n");
+        print_err("failed to create thread 1!\n");
+        return create_return;
+    }
+    create_return = pthread_create(&the_thread_again, NULL, thread, NULL);
+    if(create_return) {
+        print_err("failed to create thread 2!\n");
         return create_return;
     }
     // pthread_join(the_thread, NULL);
-    for(int i = 0; i < 100; i++) {
-        print_str("main loop!\n");
-        if(!i) pthread_join(the_thread, NULL);
-    }
-    print_str("thread finished!\n");
     // pid_t pid = fork();
     // if(pid) {
     //     print_err("failed to create child!\n");
