@@ -1,19 +1,3 @@
-class FileData {
-    path;
-    cursor;
-
-    constructor(path) {
-        this.path = path;
-        this.cursor = 0;
-    }
-}
-
-// This map is basically like root /
-// Keys are strings representing an entry
-// If the type of the value of a key is a map, it's a directory
-// Else, it's a file and the type will be a Uint8Array
-const filesystem = new Map();
-
 (async function () {
     const encoder = new TextEncoder();
 
@@ -75,6 +59,7 @@ const filesystem = new Map();
         throw d;
     }
     main_worker.postMessage([module, memory, args_array, envs]);
+    // console.log(splitPath("/home/deck/deck-tailscale"));
 
     // WebAssembly.instantiate(module, {
     //     "wasi_snapshot_preview1": wasi,
