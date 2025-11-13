@@ -2,7 +2,9 @@
     const encoder = new TextEncoder();
 
     const args_array = [
-        "./wasitests/env.wasm",
+        "./wasitests/printf.wasm",
+        "--sandwich",
+        "beans",
     ];
 
     const envs = {
