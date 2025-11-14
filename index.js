@@ -6,7 +6,7 @@ import { Mutex } from "./mutex.js";
     const encoder = new TextEncoder();
 
     const args_array = [
-        "./wasitests/thread.wasm",
+        "./wasitests/open.wasm",
         "--sandwich",
         "beans",
     ];
